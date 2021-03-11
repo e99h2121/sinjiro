@@ -1,9 +1,10 @@
 #!python3.8
 
+import random
 import sqlite3
 conn = sqlite3.connect("wnjpn.db")
 
-word = input("好きな言葉を入力してください: ")
+word = input("どうぞ、好きな言葉を入力してください: ")
 
 # 特定の単語を入力とした時に、類義語を検索する関数
 # Wordnet http://compling.hss.ntu.edu.sg/wnja/ のwnjpn.dbを利用
@@ -24,7 +25,7 @@ def SearchSimilarWords(word):
         print("「%s」は、Wordnetに存在しない単語です。" % word)
         return
     else:
-        print("【「%s」の類似語を出力します】\n" % word)
+        print("【「%s」の類似語はね、以下ですよ】\n" % word)
 
     # 入力された単語を含む概念を検索する
     cur = conn.execute("select synset from sense where wordid='%s'" % word_id)
@@ -34,6 +35,7 @@ def SearchSimilarWords(word):
 
     # 概念に含まれる単語を検索して画面出力する
     no = 1
+    l_empty = []
     for synset in synsets:
         cur1 = conn.execute("select name from synset where synset='%s'" % synset)
         for row1 in cur1:
@@ -42,6 +44,8 @@ def SearchSimilarWords(word):
         sub_no = 1
         for row2 in cur2:
             print("意味%s : %s" %(sub_no, row2[0]))
+            # 対象に追加
+            l_empty.append(row2[0])
             sub_no += 1
         cur3 = conn.execute("select wordid from sense where (synset='%s' and wordid!=%s)" % (synset,word_id))
         sub_no = 1
@@ -50,12 +54,13 @@ def SearchSimilarWords(word):
             cur3_1 = conn.execute("select lemma from word where wordid=%s" % target_word_id)
             for row3_1 in cur3_1:
                 print("類義語%s : %s" % (sub_no, row3_1[0]))
-                sinjiro = row3_1[0]
+                # 対象に追加
+                l_empty.append(row3_1[0])
                 sub_no += 1
         print("\n")
         no += 1
 
-    print(f"私はね、{word} とはですね、言ってみればもはや " +sinjiro+ " だと思うんですよ。")
+    print(f"私はね、{word} とはですね、言ってみればもはや " +random.choice(l_empty)+ " だと思うんですよ。")
 
 SearchSimilarWords(word)
 
