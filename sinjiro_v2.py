@@ -59,8 +59,13 @@ def SearchSimilarWords(word):
                 sub_no += 1
         print("\n")
         no += 1
-
-    print(f"私はね、{word} とはですね、言ってみればもはや " +random.choice(l_empty)+ " だと思うんですよ。")
+    
+    answer = random.choice(l_empty)
+    l_phrase = []
+    l_phrase.append(f"私はね、{word} とはですね、言ってみればもはや {answer} だと思うんですよ。")
+    l_phrase.append(f"{word} ってことはですよ、{answer} とも考えられるということですよ。")
+    l_phrase.append(f"{word} って、もう {answer} ですよね。")
+    phrase = random.choice(l_phrase)
+    print(phrase)
 
 SearchSimilarWords(word)
-
