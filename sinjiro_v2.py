@@ -22,13 +22,13 @@ def SearchSimilarWords(word):
 
     # Wordnetに存在する語であるかの判定
     if word_id==99999999:
-        print("「%s」は、Wordnetに存在しない単語です。" % word)
+        print(f"「{word}」は、Wordnetに存在しない単語です。")
         return
     else:
-        print("【「%s」の類似語はね、以下ですよ】\n" % word)
+        print(f"【「{word}」の類似語はね、以下ですよ】\n")
 
     # 入力された単語を含む概念を検索する
-    cur = conn.execute("select synset from sense where wordid='%s'" % word_id)
+    cur = conn.execute(f"select synset from sense where wordid='{word_id}'")
     synsets = []
     for row in cur:
         synsets.append(row[0])
@@ -37,7 +37,7 @@ def SearchSimilarWords(word):
     no = 1
     l_empty = []
     for synset in synsets:
-        cur1 = conn.execute("select name from synset where synset='%s'" % synset)
+        cur1 = conn.execute(f"select name from synset where synset='{synset}'")
         for row1 in cur1:
             print("%sつめの概念 : %s" %(no, row1[0]))
         cur2 = conn.execute("select def from synset_def where (synset='%s' and lang='jpn')" % synset)
@@ -47,11 +47,11 @@ def SearchSimilarWords(word):
             # 対象に追加
             l_empty.append(row2[0])
             sub_no += 1
-        cur3 = conn.execute("select wordid from sense where (synset='%s' and wordid!=%s)" % (synset,word_id))
+        cur3 = conn.execute(f"select wordid from sense where (synset='{synset}' and wordid!={word_id})")
         sub_no = 1
         for row3 in cur3:
             target_word_id = row3[0]
-            cur3_1 = conn.execute("select lemma from word where wordid=%s" % target_word_id)
+            cur3_1 = conn.execute(f"select lemma from word where wordid={target_word_id}")
             for row3_1 in cur3_1:
                 print("類義語%s : %s" % (sub_no, row3_1[0]))
                 # 対象に追加
