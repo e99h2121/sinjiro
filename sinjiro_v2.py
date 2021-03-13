@@ -15,7 +15,7 @@ word = input("どうぞ、好きな言葉を入力してください: ")
 def SearchSimilarWords(word):
 
     # 問い合わせしたい単語がWordnetに存在するか確認する
-    cur = conn.execute("select wordid from word where lemma='%s'" % word)
+    cur = conn.execute(f"select wordid from word where lemma='{word}'")
     word_id = 99999999  #temp 
     for row in cur:
         word_id = row[0]
